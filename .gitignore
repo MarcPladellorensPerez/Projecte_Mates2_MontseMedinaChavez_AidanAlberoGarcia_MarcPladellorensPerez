@@ -1,41 +1,54 @@
-# Prerequisites
+.vs/
+.vscode/
+*.user
+*.suo
+*.ipch
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
+*.db
+
+x64/
+x86/
+[Dd]ebug/
+[Rr]elease/
+build/
+out/
+
 *.d
 
-# Compiled Object files
 *.slo
 *.lo
 *.o
 *.obj
 
-# Precompiled Headers
 *.gch
 *.pch
 
-# Linker files
 *.ilk
+*.exp
 
-# Debugger Files
 *.pdb
+*.idb
 
-# Compiled Dynamic libraries
 *.so
 *.dylib
 *.dll
+# !glew32.dll
+# !SDL3.dll
 
-# Fortran module files
 *.mod
 *.smod
 
-# Compiled Static libraries
 *.lai
 *.la
 *.a
 *.lib
 
-# Executables
 *.exe
 *.out
 *.app
 
-# debug information files
 *.dwo
