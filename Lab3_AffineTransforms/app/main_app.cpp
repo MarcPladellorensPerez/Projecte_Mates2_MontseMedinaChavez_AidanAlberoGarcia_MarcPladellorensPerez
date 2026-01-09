@@ -94,19 +94,19 @@ void DrawHierarchyNode(GameObject* node) {
         flags |= ImGuiTreeNodeFlags_Selected;
     }
 
-	//TODO: Si l'objecte no té fills (leaf), fer servir aquest codi:
+    //TODO: Si l'objecte no té fills (leaf), fer servir aquest codi:
     flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
     ImGui::TreeNodeEx((void*)(intptr_t)node, flags, "%s", "TODO: <Nom Objecte>");
     if (ImGui::IsItemClicked()) selectedObject = node;
 
-	//TODO: Si l'objecte té fills, fer servir aquest codi:
+    //TODO: Si l'objecte té fills, fer servir aquest codi:
 
     /*
     bool nodeOpen = ImGui::TreeNodeEx((void*)(intptr_t)node, flags, "%s", "TODO: <Nom Objecte>");
     if (ImGui::IsItemClicked()) selectedObject = node;
 
     if (nodeOpen) {
-		// TODO: Cridar recursivament DrawHierarchyNode pels fills de l'objecte
+        // TODO: Cridar recursivament DrawHierarchyNode pels fills de l'objecte
         ImGui::TreePop();
     }
     */
@@ -176,9 +176,9 @@ int main(int argc, char** argv) {
     GameObject* rootObject = new GameObject();
     std::vector<GameObject*> sceneRoots = { rootObject };
 
-	Camera mainCamera; //TODO: Inicialitzar la càmera
+    Camera mainCamera; //TODO: Inicialitzar la càmera
 
-	// 5. Loop Principal
+    // 5. Loop Principal
     bool running = true;
     while (running) {
         // --- INPUT ---
@@ -196,9 +196,9 @@ int main(int argc, char** argv) {
 
         // UI: Jerarquia
         ImGui::Begin("Hierarchy");
-        if (ImGui::Button("Add Object to Root")) 
+        if (ImGui::Button("Add Object to Root"))
         {
-			//TODO: Afegir un nou GameObject a l'arrel de l'escena
+            //TODO: Afegir un nou GameObject a l'arrel de l'escena
         }
         ImGui::Separator();
         for (auto* obj : sceneRoots) DrawHierarchyNode(obj);
@@ -210,28 +210,28 @@ int main(int argc, char** argv) {
             ImGui::Text("Selected: %s", "TODO: <Nom Objecte>");
             ImGui::Separator();
 
-			float pos[3] = { 0,0,0 }; // TODO: Agafar la posició del selectedObject
+            float pos[3] = { 0,0,0 }; // TODO: Agafar la posició del selectedObject
             if (ImGui::DragFloat3("Position", pos, 0.1f))
             {
-				//TODO: Actualitzar la posició del selectedObject
+                //TODO: Actualitzar la posició del selectedObject
             }
 
-			float rot[3] = { 0,0,0 }; // TODO: Agafar la rotació del selectedObject
+            float rot[3] = { 0,0,0 }; // TODO: Agafar la rotació del selectedObject
             if (ImGui::DragFloat3("Rotation (Euler)", rot, 0.5f))
             {
-				// TODO: Actualitzar la rotació del selectedObject
+                // TODO: Actualitzar la rotació del selectedObject
             }
 
-			float scl[3] = { 0,0,0 }; // TODO: Agafar l'escala del selectedObject
+            float scl[3] = { 0,0,0 }; // TODO: Agafar l'escala del selectedObject
             if (ImGui::DragFloat3("Scale", scl, 0.1f))
             {
-				// TODO: Actualitzar l'escala del selectedObject
+                // TODO: Actualitzar l'escala del selectedObject
             }
 
             ImGui::Separator();
-            if (ImGui::Button("Add Child")) 
+            if (ImGui::Button("Add Child"))
             {
-				// TODO: Afegir un nou GameObject com a fill del selectedObject
+                // TODO: Afegir un nou GameObject com a fill del selectedObject
             }
         }
         else {
@@ -241,25 +241,25 @@ int main(int argc, char** argv) {
 
         // UI: Camera
         ImGui::Begin("Camera Settings");
-		float fov = 0; // TODO: Agafar el FOV de la càmera
+        float fov = 0; // TODO: Agafar el FOV de la càmera
         if (ImGui::SliderFloat("FOV (Y)", &fov, 10.0f, 170.0f))
         {
-			// TODO: Actualitzar el FOV de la càmera
+            // TODO: Actualitzar el FOV de la càmera
         }
 
-		float nearP = 0, farP = 0; // TODO: Agafar near i far de la càmera
+        float nearP = 0, farP = 0; // TODO: Agafar near i far de la càmera
         ImGui::DragFloat("Near Plane", &nearP, 0.1f);
         ImGui::DragFloat("Far Plane", &farP, 1.0f);
-        
-		// TODO: Actualitzar near i far de la càmera si canvien
+
+        // TODO: Actualitzar near i far de la càmera si canvien
 
 
         ImGui::Separator();
         ImGui::Text("Camera Transform");
-		float cPos[3] = { 0,0,0 }; // TODO: Agafar la posició de la càmera
+        float cPos[3] = { 0,0,0 }; // TODO: Agafar la posició de la càmera
         if (ImGui::DragFloat3("Pos", cPos, 0.1f))
         {
-			// TODO: Actualitzar la posició de la càmera
+            // TODO: Actualitzar la posició de la càmera
         }
         ImGui::End();
 
@@ -269,7 +269,7 @@ int main(int argc, char** argv) {
         glViewport(0, 0, w, h);
         if (h > 0)
         {
-			// TODO: Actualitzar aspect ratio de la càmera
+            // TODO: Actualitzar aspect ratio de la càmera
         }
 
         glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
@@ -282,7 +282,7 @@ int main(int argc, char** argv) {
             Matrix4x4 view{};
             Matrix4x4 proj{};
 
-			// TODO: Recorregut de l'escena i renderitzat (RenderNode)
+            // TODO: Recorregut de l'escena i renderitzat (RenderNode)
         }
 
         ImGui::Render();
