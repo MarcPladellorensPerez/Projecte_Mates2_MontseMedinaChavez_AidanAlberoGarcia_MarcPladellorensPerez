@@ -193,12 +193,20 @@ void DrawHierarchyNode(GameObject* node) {
 void RenderNode(GameObject* node, GLuint shaderProgram, const Matrix4x4& view, const Matrix4x4& proj, Mesh& mesh) {
     if (!node) return;
 
-    // TODO: Implementar el recorregut recursiu de renderitzat
-    // 1. Calcular la matriu Model (Global) de l'objecte actual.
-    // 2. Enviar les matrius Model, View i Projection al shader (usant GraphicsUtils).
-    // 3. Enviar color (usant GraphicsUtils).
-    // 4. Dibuixar la mesh.
-    // 5. Cridar recursivament RenderNode pels fills.
+    // 1. Matriu global
+    Matrix4x4 model = node->GetGlobalMatrix();
+
+    // 2. Enviar uniforms
+    GraphicsUtils::UploadMVP(shaderProgram, model, view, proj); 
+    GraphicsUtils::UploadColor(shaderProgram, node->color);
+
+    // 3. Dibuixar
+    mesh.Draw();
+
+    // 4. Fills
+    for (auto* child : node->children) { 
+        RenderNode(child, shaderProgram, view, proj, mesh); 
+    }
 }
 
 // -----------------------------------------------------------------------------
