@@ -5,6 +5,8 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <imgui_internal.h>
+
 
 // ImGui
 #include "imgui.h"
@@ -17,9 +19,82 @@
 #include "utils/GraphicsUtils.hpp" // Conté helpers per OpenGL
 
 // TODO: Placeholder
-class Transform {};
-class GameObject {};
-class Camera {};
+Matrix3x3 EulerToMatrix(const Vec3& euler) {
+    double radX = euler.x * IM_PI / 180.0;
+    double radY = euler.y * IM_PI / 180.0;
+    double radZ = euler.z * IM_PI / 180.0;
+
+    Matrix3x3 Rx = Matrix3x3::RotationAxisAngle({ 1.0, 0.0, 0.0 }, radX);
+    Matrix3x3 Ry = Matrix3x3::RotationAxisAngle({ 0.0, 1.0, 0.0 }, radY);
+    Matrix3x3 Rz = Matrix3x3::RotationAxisAngle({ 0.0, 0.0, 1.0 }, radZ);
+
+    return Rz.Multiply(Ry.Multiply(Rx));
+}
+
+class Transform {
+public:
+    Vec3 position = { 0.0, 0.0, 0.0 };
+    Vec3 rotation = { 0.0, 0.0, 0.0 }; 
+    Vec3 scale = { 1.0, 1.0, 1.0 };
+
+    Matrix4x4 GetLocalMatrix() const {
+        Matrix3x3 R = EulerToMatrix(rotation);
+        return Matrix4x4::FromTRS(position, R, scale);
+    }
+};
+
+class GameObject {
+public:
+    std::string name;
+    Transform transform;
+    GameObject* parent = nullptr;
+    std::vector<GameObject*> children;
+    Vec3 color = { 1.0, 1.0, 1.0 };
+
+    GameObject(const std::string& n = "New Object") : name(n) {}
+
+    Matrix4x4 GetGlobalMatrix() const {
+        Matrix4x4 local = transform.GetLocalMatrix();
+        if (parent != nullptr) {
+            return parent->GetGlobalMatrix().Multiply(local);
+        }
+        return local;
+    }
+
+    void AddChild(GameObject* child) {
+        child->parent = this;
+        children.push_back(child);
+    }
+};
+
+class Camera {
+public:
+    Transform transform;
+    float fov = 60.0f;
+    float nearPlane = 0.1f;
+    float farPlane = 100.0f;
+    float aspectRatio = 1.777f;
+
+    // View Matrix 
+    Matrix4x4 GetViewMatrix() const {
+        Matrix4x4 M = transform.GetLocalMatrix();
+        return M.InverseTR();
+    }
+
+    // Projection Matrix
+    Matrix4x4 GetProjectionMatrix() const {
+        Matrix4x4 P = Matrix4x4::Identity();
+        double tanHalfFov = std::tan((fov * IM_PI / 180.0) / 2.0);
+
+        P.At(0, 0) = 1.0 / (aspectRatio * tanHalfFov);
+        P.At(1, 1) = 1.0 / tanHalfFov;
+        P.At(2, 2) = -(farPlane + nearPlane) / (farPlane - nearPlane);
+        P.At(2, 3) = -(2.0 * farPlane * nearPlane) / (farPlane - nearPlane);
+        P.At(3, 2) = -1.0;
+        P.At(3, 3) = 0.0;
+        return P;
+    }
+};
 
 // -----------------------------------------------------------------------------
 // HELPER: Càrrega de fitxers de text (per Shaders)
