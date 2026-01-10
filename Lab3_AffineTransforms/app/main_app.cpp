@@ -256,10 +256,12 @@ int main(int argc, char** argv) {
     if (shaderProgram == 0) std::cerr << "Warning: Shaders not loaded properly." << std::endl;
 
     // 4. TODO: Preparar escena Inicial
-    GameObject* rootObject = new GameObject();
+    GameObject* rootObject = new GameObject("Root Cube");
+    rootObject->color = { 0.85f, 0.5f, 0.2f };
     std::vector<GameObject*> sceneRoots = { rootObject };
 
     Camera mainCamera; //TODO: Inicialitzar la càmera
+    mainCamera.transform.position = { 0.0f, 2.0f, 10.0f };
 
     // 5. Loop Principal
     bool running = true;
