@@ -163,28 +163,30 @@ GameObject* selectedObject = nullptr;
 
 void DrawHierarchyNode(GameObject* node) {
     if (!node) return;
-
-    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
+        ImGuiTreeNodeFlags_OpenOnDoubleClick;
     if (node == selectedObject) {
         flags |= ImGuiTreeNodeFlags_Selected;
     }
-
-    //TODO: Si l'objecte no té fills (leaf), fer servir aquest codi:
-    flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-    ImGui::TreeNodeEx((void*)(intptr_t)node, flags, "%s", "TODO: <Nom Objecte>");
-    if (ImGui::IsItemClicked()) selectedObject = node;
-
-    //TODO: Si l'objecte té fills, fer servir aquest codi:
-
-    /*
-    bool nodeOpen = ImGui::TreeNodeEx((void*)(intptr_t)node, flags, "%s", "TODO: <Nom Objecte>");
-    if (ImGui::IsItemClicked()) selectedObject = node;
-
-    if (nodeOpen) {
-        // TODO: Cridar recursivament DrawHierarchyNode pels fills de l'objecte
-        ImGui::TreePop();
+    if (node->children.empty()) {
+        // Cas Leaf (sense fills)
+        flags |= ImGuiTreeNodeFlags_Leaf |
+            ImGuiTreeNodeFlags_NoTreePushOnOpen;
+        ImGui::TreeNodeEx((void*)(intptr_t)node, flags, "%s", node -> name.c_str());
+if (ImGui::IsItemClicked()) selectedObject = node;
     }
-    */
+    else {
+        // Cas Node (amb fills)
+        bool nodeOpen = ImGui::TreeNodeEx((void*)(intptr_t)node, flags,
+            "%s", node->name.c_str());
+        if (ImGui::IsItemClicked()) selectedObject = node;
+        if (nodeOpen) {
+            for (auto* child : node->children) {
+                DrawHierarchyNode(child);
+            }
+            ImGui::TreePop();
+        }
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -281,9 +283,13 @@ int main(int argc, char** argv) {
 
         // UI: Jerarquia
         ImGui::Begin("Hierarchy");
-        if (ImGui::Button("Add Object to Root"))
-        {
-            //TODO: Afegir un nou GameObject a l'arrel de l'escena
+        if (ImGui::Button("Add Object to Root")) {
+            GameObject* newObj = new GameObject("New Cube");
+            newObj->transform.position.x = (double)((rand() % 10) - 5.0f);
+            newObj->color = { (double)rand() / RAND_MAX, (double)rand() /
+
+            RAND_MAX, (double)rand() / RAND_MAX };
+            sceneRoots.push_back(newObj);
         }
         ImGui::Separator();
         for (auto* obj : sceneRoots) DrawHierarchyNode(obj);
